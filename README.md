@@ -1,2 +1,26 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/l6edej4a)
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=19903006&assignment_repo_type=AssignmentRepo)
+# KSLingo - Kenyan Sign Language Learning App
+
+A mobile application for learning Kenyan Sign Language with AI-powered gesture recognition.
+
+## Features
+- User authentication with Firebase
+- Interactive KSL lessons
+- AI gesture recognition
+- Progress tracking
+- Responsive UI/UX
+
+## Tech Stack
+- Kotlin
+- Jetpack Compose
+- Firebase Authentication
+- Firebase Firestore
+- MediaPipe for gesture recognition
+
+## Setup
+1. Clone the repository
+2. Open in Android Studio
+3. Add your `google-services.json` file
+4. Build and run
+
+## Contributors
+- [Mercy Mwaniki] - [151675]
