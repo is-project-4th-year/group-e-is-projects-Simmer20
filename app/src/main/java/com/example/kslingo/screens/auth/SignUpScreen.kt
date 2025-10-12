@@ -1,5 +1,6 @@
-package com.example.kslingo
+package com.example.kslingo.screens
 
+import android.util.Patterns
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.kslingo.FirebaseAuthService
 import kotlinx.coroutines.launch
 
 
@@ -216,7 +218,7 @@ fun validateSignupForm(
     if (username.isEmpty()) return "Username is required"
     if (username.length < 3) return "Username must be at least 3 characters"
     if (email.isEmpty()) return "Email is required"
-    if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) return "Please enter a valid email"
+    if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) return "Please enter a valid email"
     if (password.length < 6) return "Password must be at least 6 characters"
     if (password != confirmPassword) return "Passwords do not match"
     return null
