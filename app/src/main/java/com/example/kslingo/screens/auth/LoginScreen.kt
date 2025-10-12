@@ -1,4 +1,4 @@
-package com.example.kslingo
+package com.example.kslingo.screens.auth
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,6 +39,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.kslingo.data.FirebaseAuthService
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -139,12 +140,22 @@ fun LoginScreen(navController: NavController) {
 
                         isLoading = false
 
-                        if (result.isSuccess) {
-                            navController.navigate("home") {
-                                popUpTo("login") { inclusive = true }
+                        when {
+                            result.isSuccess -> {
+                                val response = result.getOrNull()
+                                if (response == "SUCCESS") {
+                                    // Direct login - no 2FA
+                                    navController.navigate("home") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
+                                } else {
+                                    // 2FA required - navigate with user ID
+                                    navController.navigate("two_fa/$response")
+                                }
                             }
-                        } else {
-                            errorMessage = result.exceptionOrNull()?.message ?: "Login failed. Please try again."
+                            else -> {
+                                errorMessage = result.exceptionOrNull()?.message ?: "Login failed"
+                            }
                         }
                     }
                 } else {

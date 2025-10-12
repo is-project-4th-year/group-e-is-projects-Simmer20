@@ -1,4 +1,4 @@
-package com.example.kslingo.screens
+package com.example.kslingo.screens.auth
 
 import android.util.Patterns
 import androidx.compose.foundation.layout.Arrangement
@@ -40,7 +40,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.kslingo.FirebaseAuthService
+import androidx.navigation.NavHostController
+import com.example.kslingo.data.FirebaseAuthService
 import kotlinx.coroutines.launch
 
 
@@ -222,4 +223,8 @@ fun validateSignupForm(
     if (password.length < 6) return "Password must be at least 6 characters"
     if (password != confirmPassword) return "Passwords do not match"
     return null
+}
+
+class SignUpScreen(navController: NavHostController) {
+
 }

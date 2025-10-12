@@ -1,4 +1,4 @@
-package com.example.kslingo
+package com.example.kslingo.screens.onboarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.kslingo.R
 
 data class OnboardingPage(
     val title: String,

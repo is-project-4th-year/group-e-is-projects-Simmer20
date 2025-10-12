@@ -13,8 +13,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.kslingo.screens.auth.ForgotPasswordScreen
+import com.example.kslingo.screens.auth.LoginScreen
+import com.example.kslingo.screens.auth.SignupScreen
+import com.example.kslingo.screens.home.HomeScreen
+import com.example.kslingo.screens.onboarding.OnboardingScreen
+import com.example.kslingo.screens.onboarding.SplashScreen
 import com.example.kslingo.ui.theme.KSLingoTheme
 import com.google.firebase.FirebaseApp
+import com.example.kslingo.screens.auth.TwoFAScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -45,11 +52,15 @@ fun AppNavigation() {
         startDestination = "splash"
     ) {
         composable("splash") { SplashScreen(navController) }
-        composable("onboarding") {OnboardingScreen(navController) }
+        composable("onboarding") { OnboardingScreen(navController) }
         composable("signup") { SignupScreen(navController) }
         composable("login") { LoginScreen(navController) }
         composable("forgot_password") { ForgotPasswordScreen(navController) }
+        composable ("two_fa/{userId}") {
+            backStackEntry -> val userId = backStackEntry.arguments?.getString("userId")
+            TwoFAScreen(navController, userId) }
         composable("home") { HomeScreen(navController) }
+
     }
 }
 

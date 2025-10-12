@@ -1,4 +1,4 @@
-package com.example.kslingo
+package com.example.kslingo.screens.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.runtime.remember
+import com.example.kslingo.data.FirebaseAuthService
 
 @Composable
 fun HomeScreen(navController: NavController) {
