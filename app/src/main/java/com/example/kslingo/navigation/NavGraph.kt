@@ -18,6 +18,7 @@ import com.example.kslingo.screens.dictionary.DictionaryScreen
 import com.example.kslingo.screens.lessons.LessonsScreen
 import com.example.kslingo.screens.practice.PracticeScreen
 import com.example.kslingo.screens.progress.ProgressScreen
+import com.example.kslingo.screens.settings.SettingsScreen
 
 @Composable
 fun AppNavigation() {
@@ -61,10 +62,6 @@ fun AppNavigation() {
     }
 }
 
-@Composable
-fun SettingsScreen(navController: NavHostController) {
-    TODO("Not yet implemented")
-}
 
 @Composable
 fun ProfileScreen(navController: NavHostController) {

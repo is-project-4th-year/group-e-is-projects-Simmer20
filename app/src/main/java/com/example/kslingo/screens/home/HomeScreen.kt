@@ -1,7 +1,6 @@
 package com.example.kslingo.screens.home
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,14 +36,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.kslingo.R
 import com.example.kslingo.data.FirebaseAuthService
-
 
 data class DashboardItem(
     val title: String,
@@ -58,6 +54,10 @@ data class DashboardItem(
 fun HomeScreen(navController: NavController) {
     val authService = remember { FirebaseAuthService() }
     val currentUser = authService.getCurrentUser()
+
+    // Define navigation handlers at the top level
+    val onProfileClick = { navController.navigate("profile") }
+    val onSettingsClick = { navController.navigate("settings") }
 
     val dashboardItems = listOf(
         DashboardItem(
@@ -95,12 +95,12 @@ fun HomeScreen(navController: NavController) {
             .fillMaxSize()
             .background(Color(0xFFF8F8F8))
     ) {
-        // Header with user info
+        // Header with user info - pass the handlers
         HeaderSection(
             username = currentUser?.displayName ?: "Learner",
             email = currentUser?.email ?: "",
-            onProfileClick = { navController.navigate("profile") },
-            onSettingsClick = { navController.navigate("settings") }
+            onProfileClick = onProfileClick,  // Use the defined handler
+            onSettingsClick = onSettingsClick  // Use the defined handler
         )
 
         // Welcome section
@@ -115,7 +115,10 @@ fun HomeScreen(navController: NavController) {
             items(dashboardItems) { item ->
                 DashboardCard(
                     item = item,
-                    onClick = { navController.navigate(item.route) }
+                    onClick = {
+                        Log.d("DashboardCard", "Navigating to ${item.route}")
+                        navController.navigate(item.route)
+                    }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
             }
@@ -127,8 +130,8 @@ fun HomeScreen(navController: NavController) {
 fun HeaderSection(
     username: String,
     email: String,
-    onProfileClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    onProfileClick: () -> Unit,  // Accept function parameters
+    onSettingsClick: () -> Unit   // Accept function parameters
 ) {
     Row(
         modifier = Modifier
@@ -157,7 +160,7 @@ fun HeaderSection(
         }
 
         Row {
-            IconButton(onClick = onProfileClick) {
+            IconButton(onClick = onProfileClick) {  // Use the passed function
                 Icon(
                     imageVector = Icons.Default.AccountCircle,
                     contentDescription = "Profile",
@@ -165,7 +168,7 @@ fun HeaderSection(
                     modifier = Modifier.size(32.dp)
                 )
             }
-            IconButton(onClick = onSettingsClick) {
+            IconButton(onClick = onSettingsClick) {  // Use the passed function
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = "Settings",
@@ -240,9 +243,7 @@ fun DashboardCard(
     onClick: () -> Unit
 ) {
     Card(
-        onClick = { if (item.route in listOf("lessons", "practice", "progress", "dictionary"))
-                  Log.d("DashboardCard", "Navigating to ${item.route}")
-                  onClick()},
+        onClick = onClick,  // Use the passed onClick directly
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp),
