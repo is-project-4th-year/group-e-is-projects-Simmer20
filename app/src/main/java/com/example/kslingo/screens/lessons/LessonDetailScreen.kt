@@ -159,7 +159,7 @@ fun LessonContent(
                 // Sign Image (Placeholder)
                 Box(
                     modifier = Modifier
-                        .size(200.dp)
+                        .size(300.dp)
                         .clip(RoundedCornerShape(20.dp))
                         .background(Color.LightGray.copy(alpha = 0.3f)),
                     contentAlignment = Alignment.Center
