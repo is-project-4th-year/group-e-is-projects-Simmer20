@@ -4,10 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -26,10 +29,11 @@ import com.example.kslingo.ui.theme.KSLingoTheme
 import com.google.firebase.FirebaseApp
 import com.example.kslingo.screens.auth.TwoFAScreen
 import com.example.kslingo.screens.dictionary.DictionaryScreen
+import com.example.kslingo.screens.lessons.LessonCategoryScreen
+import com.example.kslingo.screens.lessons.LessonDetailScreen
 import com.example.kslingo.screens.lessons.LessonsScreen
 import com.example.kslingo.screens.practice.PracticeScreen
 import com.example.kslingo.screens.progress.ProgressScreen
-import com.example.kslingo.screens.settings.SettingsScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -72,6 +76,13 @@ fun AppNavigation() {
         // Main App screens
         composable("home") {HomeScreen(navController = navController)}
         composable("lessons") {LessonsScreen(navController = navController)}
+        composable("lesson_category/{categoryId}") {backStackEntry ->
+            val categoryId = backStackEntry.arguments?.getString("categoryId")
+            LessonCategoryScreen(navController, categoryId)}
+        composable("lesson_detail/{lessonId}") { backStackEntry ->
+            val lessonId = backStackEntry.arguments?.getString("lessonId")
+            LessonDetailScreen(navController, lessonId)
+            }
         composable("practice") { PracticeScreen(navController = navController)}
         composable("progress") { ProgressScreen(navController = navController)}
         composable("dictionary") { DictionaryScreen(navController = navController)}

@@ -1,14 +1,13 @@
-package com.example.kslingo.data
+package com.example.kslingo.data.service
 
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.auth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
-import java.util.UUID
 
 class FirebaseAuthService {
     private val auth: FirebaseAuth = Firebase.auth
@@ -140,7 +139,7 @@ class FirebaseAuthService {
                     hashMapOf(
                         "userId" to user.uid,
                         "action" to "password_reset_requested",
-                        "timestamp" to com.google.firebase.Timestamp.now(),
+                        "timestamp" to Timestamp.now(),
                         "email" to email
                     )
                 ).await()
@@ -172,7 +171,7 @@ class FirebaseAuthService {
                 val user = hashMapOf(
                     "email" to email,
                     "username" to username,
-                    "createdAt" to com.google.firebase.Timestamp.now(),
+                    "createdAt" to Timestamp.now(),
                     "is2FAEnabled" to false, // Default to disabled
                     "progress" to hashMapOf(
                         "lessonsCompleted" to 0,

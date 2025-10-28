@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.example.kslingo.data.FirebaseAuthService
+import com.example.kslingo.data.service.FirebaseAuthService
 import kotlinx.coroutines.launch
 
 

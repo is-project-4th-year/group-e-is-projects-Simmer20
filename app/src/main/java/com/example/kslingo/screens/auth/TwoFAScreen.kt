@@ -36,7 +36,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.kslingo.data.FirebaseAuthService
+import com.example.kslingo.data.service.FirebaseAuthService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
-import com.example.kslingo.data.FirebaseAuthService
+import com.example.kslingo.data.service.FirebaseAuthService
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForgotPasswordScreen(navController: NavController) {
