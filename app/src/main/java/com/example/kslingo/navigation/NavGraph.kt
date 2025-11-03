@@ -19,6 +19,9 @@ import com.example.kslingo.screens.lessons.LessonsScreen
 import com.example.kslingo.screens.practice.PracticeScreen
 import com.example.kslingo.screens.progress.ProgressScreen
 import com.example.kslingo.screens.settings.SettingsScreen
+import com.example.kslingo.screens.quiz.QuizSelectionScreen
+import com.example.kslingo.screens.quiz.QuizQuestionsScreen
+import com.example.kslingo.screens.quiz.QuizResultsScreen
 
 @Composable
 fun AppNavigation() {
@@ -55,10 +58,17 @@ fun AppNavigation() {
         composable("dictionary") { DictionaryScreen(navController = navController)}
         composable("profile") { ProfileScreen(navController = navController)}
         composable("settings") { SettingsScreen(navController = navController)}
-
-
-
-
+        composable("quiz_selection") { QuizSelectionScreen(navController) }
+        composable("quiz_questions/{quizId}") { backStackEntry ->
+            val quizId = backStackEntry.arguments?.getString("quizId")
+            QuizQuestionsScreen(navController, quizId)
+        }
+        composable("quiz_results/{quizId}/{score}/{totalQuestions}") { backStackEntry ->
+            val quizId = backStackEntry.arguments?.getString("quizId")
+            val score = backStackEntry.arguments?.getString("score")?.toIntOrNull() ?: 0
+            val totalQuestions = backStackEntry.arguments?.getString("totalQuestions")?.toIntOrNull() ?: 0
+            QuizResultsScreen(navController, quizId, score, totalQuestions)
+        }
     }
 }
 
