@@ -41,6 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.kslingo.data.service.FirebaseAuthService
+import androidx.compose.material.icons.filled.Quiz // <-- Add this import
+
 
 data class DashboardItem(
     val title: String,
@@ -66,6 +68,13 @@ fun HomeScreen(navController: NavController) {
             icon = Icons.Default.PlayArrow,
             color = Color(0xFF6A35EE),
             route = "lessons"
+        ),
+        DashboardItem(
+            title = "Take Quiz",
+            description = "Test your KSL knowledge with interactive quizzes",
+            icon = Icons.Default.Quiz,
+            color = Color(0xFFFF9800),
+            route = "quiz_selection"
         ),
         DashboardItem(
             title = "Practice Gestures",
