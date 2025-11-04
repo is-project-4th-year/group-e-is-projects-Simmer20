@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.kslingo.data.service.FirebaseAuthService
-import androidx.compose.material.icons.filled.Quiz // <-- Add this import
+import androidx.compose.material.icons.filled.Quiz
 
 
 data class DashboardItem(
@@ -169,7 +169,7 @@ fun HeaderSection(
         }
 
         Row {
-            IconButton(onClick = onProfileClick) {  // Use the passed function
+            IconButton(onClick = onProfileClick) {
                 Icon(
                     imageVector = Icons.Default.AccountCircle,
                     contentDescription = "Profile",
@@ -177,7 +177,7 @@ fun HeaderSection(
                     modifier = Modifier.size(32.dp)
                 )
             }
-            IconButton(onClick = onSettingsClick) {  // Use the passed function
+            IconButton(onClick = onSettingsClick) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = "Settings",
@@ -252,7 +252,7 @@ fun DashboardCard(
     onClick: () -> Unit
 ) {
     Card(
-        onClick = onClick,  // Use the passed onClick directly
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp),

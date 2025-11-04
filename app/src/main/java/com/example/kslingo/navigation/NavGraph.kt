@@ -17,11 +17,13 @@ import androidx.compose.runtime.Composable
 import com.example.kslingo.screens.dictionary.DictionaryScreen
 import com.example.kslingo.screens.lessons.LessonsScreen
 import com.example.kslingo.screens.practice.PracticeScreen
+import com.example.kslingo.screens.profile.EditProfileScreen
 import com.example.kslingo.screens.progress.ProgressScreen
 import com.example.kslingo.screens.settings.SettingsScreen
 import com.example.kslingo.screens.quiz.QuizSelectionScreen
 import com.example.kslingo.screens.quiz.QuizQuestionsScreen
 import com.example.kslingo.screens.quiz.QuizResultsScreen
+import com.example.kslingo.screens.profile.ProfileScreen
 
 @Composable
 fun AppNavigation() {
@@ -57,6 +59,7 @@ fun AppNavigation() {
         composable("progress") { ProgressScreen(navController = navController)}
         composable("dictionary") { DictionaryScreen(navController = navController)}
         composable("profile") { ProfileScreen(navController = navController)}
+        composable("edit_profile") { EditProfileScreen(navController, null)}
         composable("settings") { SettingsScreen(navController = navController)}
         composable("quiz_selection") { QuizSelectionScreen(navController) }
         composable("quiz_questions/{quizId}") { backStackEntry ->
@@ -72,8 +75,3 @@ fun AppNavigation() {
     }
 }
 
-
-@Composable
-fun ProfileScreen(navController: NavHostController) {
-    TODO("Not yet implemented")
-}
