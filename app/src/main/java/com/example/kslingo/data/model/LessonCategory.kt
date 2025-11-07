@@ -6,6 +6,7 @@ data class LessonCategory(
     val description: String,
     val iconRes: Int,
     val color: Long,
+    val lessons: List<Lesson> = emptyList(),
     val totalLessons: Int,
     val completedLessons: Int,
     val isLocked: Boolean = false
