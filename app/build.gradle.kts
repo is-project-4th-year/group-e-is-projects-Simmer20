@@ -73,5 +73,16 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
     implementation("com.google.android.material:material:1.13.0")
     implementation("com.google.code.gson:gson:2.10.1")
+    //TensorFlow Lite
+    implementation("org.tensorflow:tensorflow-lite:2.17.0")
+    implementation("org.tensorflow:tensorflow-lite-support:2.17.0")
+    //MediaPipe
+    implementation("com.google.mediapipe:tasks-vision:0.20230731")
+    //CameraX for camera handling
+    implementation("androidx.camera:camera-camera2:1.5.1")
+    implementation("androidx.camera:camera-lifecycle:1.5.1")
+    implementation("androidx.camera:camera-view:1.5.1")
+    implementation("androidx.camera:camera-core:1.5.1")
+
 
 }
