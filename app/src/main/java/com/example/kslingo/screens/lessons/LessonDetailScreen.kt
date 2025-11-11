@@ -358,8 +358,10 @@ fun LessonContent(
 
                         Button(
                             onClick = {
-                                // Practice again
-                                // Could reset progress or just go to practice screen
+                                // Navigate to practice again
+                                navController.navigate("lesson_detail/${lesson.id}") {
+                                    popUpTo("lesson_detail/${lesson.id}") { inclusive = true }
+                                }
                             },
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.buttonColors(
