@@ -102,7 +102,6 @@ fun AppNavigation() {
             QuizQuestionsScreen(navController, quizId)
         }
         composable("privacy_settings") {
-            // Placeholder for now
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
