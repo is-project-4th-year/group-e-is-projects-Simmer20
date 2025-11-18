@@ -54,13 +54,9 @@ fun LessonsScreen(
 ) {
     val categories by lessonViewModel.lessonCategories.collectAsState()
 
-    // --- FIX IS HERE ---
-    // This LaunchedEffect will call loadLessonsWithProgress() every time the LessonsScreen
-    // is brought to the foreground, ensuring the progress data is always fresh.
     LaunchedEffect(key1 = Unit) {
         lessonViewModel.loadLessonsWithProgress()
     }
-    // --- END OF FIX ---
 
     Scaffold(
         topBar = {

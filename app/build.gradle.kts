@@ -18,7 +18,19 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        ndk{
+            abiFilters.addAll(setOf("armeabi-v7a", "arm64-v8a"))
+        }
     }
+
+    packaging {
+        resources {
+            excludes.add("META-INF/androidx.*")
+            excludes.add("META-INF/proguard/androidx-annotations.pro")
+            pickFirsts.add("**/*.so")
+        }
+    }
+
 
     buildTypes {
         release {
@@ -55,6 +67,7 @@ dependencies {
     implementation(libs.androidx.runtime)
     implementation(libs.firebase.database)
     implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.compose.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -74,15 +87,17 @@ dependencies {
     implementation("com.google.android.material:material:1.13.0")
     implementation("com.google.code.gson:gson:2.10.1")
     //TensorFlow Lite
-    implementation("org.tensorflow:tensorflow-lite:2.17.0")
-    implementation("org.tensorflow:tensorflow-lite-support:2.17.0")
+    implementation(libs.tensorflow.lite)
+    implementation(libs.tensorflow.lite.support)
     //MediaPipe
-    implementation("com.google.mediapipe:tasks-vision:0.20230731")
+    implementation(libs.tasks.vision)
+    //implementation(libs.tasks.vision.jni)
+
     //CameraX for camera handling
-    implementation("androidx.camera:camera-camera2:1.5.1")
-    implementation("androidx.camera:camera-lifecycle:1.5.1")
-    implementation("androidx.camera:camera-view:1.5.1")
-    implementation("androidx.camera:camera-core:1.5.1")
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.core)
 
 
 }
