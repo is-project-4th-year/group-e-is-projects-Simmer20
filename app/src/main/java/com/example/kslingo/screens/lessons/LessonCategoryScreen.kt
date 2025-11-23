@@ -30,37 +30,41 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.kslingo.data.model.Lesson
-import com.example.kslingo.data.repository.LessonsRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LessonCategoryScreen(
     navController: NavController,
-    categoryId: String?
+    categoryId: String?,
+    lessonViewModel: LessonViewModel = viewModel()
 ) {
-    val context = LocalContext.current
-    val lessonsRepository = remember { LessonsRepository(context) }
+    val lessons by lessonViewModel.lessons.collectAsState()
 
-    val lessons = when (categoryId) {
-        "alphabets" -> lessonsRepository.getAlphabetLessons()
-        "numbers" -> lessonsRepository.getNumberLessons()
-        else -> emptyList()
+    LaunchedEffect(categoryId) {
+        if (categoryId != null){
+        lessonViewModel.loadLessons(categoryId)}
     }
 
     val categoryTitle = when (categoryId) {
         "alphabets" -> "KSL Alphabets"
         "numbers" -> "KSL Numbers"
+        "phrases" -> "KSL Phrases"
+        "colors" -> "KSL Colors"
+        "family" -> "KSL Family"
+        "language" -> "KSL Language"
         else -> "Lessons"
     }
 
@@ -92,7 +96,7 @@ fun LessonCategoryScreen(
                 .padding(paddingValues)
                 .background(Color(0xFFF8F8F8))
         ) {
-            // Progress Summary
+            // Progress Summary - Now using lessons from ViewModel
             val completedLessons = lessons.count { it.isCompleted }
             val totalLessons = lessons.size
 
@@ -123,7 +127,7 @@ fun LessonCategoryScreen(
                 }
             }
 
-            // Lessons List
+            // Lessons List - Now using lessons from ViewModel
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -200,7 +204,7 @@ fun LessonCard(
                     }
                     else -> {
                         Text(
-                            text = lesson.title.takeLast(1), // Shows "A", "B", etc.
+                            text = lesson.title.takeLast(1),
                             color = Color(0xFF6A35EE),
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp

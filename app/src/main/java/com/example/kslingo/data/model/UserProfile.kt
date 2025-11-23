@@ -20,7 +20,11 @@ data class LearningStats(
     val longestStreak: Int = 0,
     val accuracy: Double = 0.0,
     val level: Int = 1,
-    val xp: Int = 0
+    val xp: Int = 0,
+    val currentLessonId: String? = "alphabet_01",
+    val currentLessonName: String = "A",
+    val currentLessonProgress: Int = 0
+
 )
 
 data class Achievement(

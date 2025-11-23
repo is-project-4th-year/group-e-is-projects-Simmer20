@@ -29,7 +29,6 @@ class LessonViewModel(application: Application) : AndroidViewModel(application) 
     init {
         loadLessonsWithProgress()
     }
-
     fun loadLessonsWithProgress() {
         viewModelScope.launch {
             val completedLessonIds = lessonStateRepository.getCompletedLessons()
@@ -83,6 +82,10 @@ class LessonViewModel(application: Application) : AndroidViewModel(application) 
         val fetchedLessons = when (categoryId) {
             "alphabets" -> lessonsRepository.getAlphabetLessons()
             "numbers" -> lessonsRepository.getNumberLessons()
+            "phrases" -> lessonsRepository.getPhrasesLessons()
+            "colors" -> lessonsRepository.getColorLessons()
+            "family" -> lessonsRepository.getFamilyLessons()
+            "language" -> lessonsRepository.getLanguageLessons()
             else -> emptyList()
         }
         updateLessons(fetchedLessons)
@@ -93,6 +96,12 @@ class LessonViewModel(application: Application) : AndroidViewModel(application) 
             lessonsRepository.markLessonCompleted(lessonId)
             // Reload to update lock/unlock states
             loadLessons(currentCategoryId)
+        }
+    }
+
+    fun refreshProgress(){
+        viewModelScope.launch{
+            loadLessonsWithProgress()
         }
     }
 

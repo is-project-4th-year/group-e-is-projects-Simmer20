@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,6 +32,7 @@ import com.example.kslingo.screens.auth.TwoFAScreen
 import com.example.kslingo.screens.dictionary.DictionaryScreen
 import com.example.kslingo.screens.lessons.LessonCategoryScreen
 import com.example.kslingo.screens.lessons.LessonDetailScreen
+import com.example.kslingo.screens.lessons.LessonViewModel
 import com.example.kslingo.screens.lessons.LessonsScreen
 import com.example.kslingo.screens.practice.PracticeScreen
 import com.example.kslingo.screens.profile.ChangePasswordScreen
@@ -82,13 +84,24 @@ fun AppNavigation() {
         // Main App screens
         composable("home") {HomeScreen(navController = navController)}
         composable("lessons") {LessonsScreen(navController = navController)}
-        composable("lesson_category/{categoryId}") {backStackEntry ->
+        composable("lesson_category/{categoryId}") { backStackEntry ->
             val categoryId = backStackEntry.arguments?.getString("categoryId")
-            LessonCategoryScreen(navController, categoryId)}
+            val lessonViewModel: LessonViewModel = viewModel(backStackEntry)
+            LessonCategoryScreen(
+                navController = navController,
+                categoryId = categoryId,
+                lessonViewModel = lessonViewModel
+            )
+        }
         composable("lesson_detail/{lessonId}") { backStackEntry ->
             val lessonId = backStackEntry.arguments?.getString("lessonId")
-            LessonDetailScreen(navController, lessonId)
-            }
+            val lessonViewModel: LessonViewModel = viewModel(backStackEntry)
+            LessonDetailScreen(
+                navController = navController,
+                lessonId = lessonId,
+                lessonViewModel = lessonViewModel
+            )
+        }
         composable("practice") { PracticeScreen(navController = navController)}
         composable("progress") { ProgressScreen(navController = navController)}
         composable("dictionary") { DictionaryScreen(navController = navController)}
@@ -118,6 +131,10 @@ fun AppNavigation() {
     }
 }
 
+@Composable
+fun LessonsScreen(navController: NavHostController) {
+    TODO("Not yet implemented")
+}
 
 
 @Preview(showBackground = true)

@@ -159,9 +159,6 @@ class UserProfileRepository(private val context: Context) {
         }
     }
 
-    /**
-     * Updates the display name and username in both Firebase Auth and Firestore.
-     */
     suspend fun updateProfile(updatedProfile: UserProfile): Boolean {
         val user = auth.currentUser ?: return false
         return try {
