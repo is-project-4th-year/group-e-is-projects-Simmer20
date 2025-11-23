@@ -1,6 +1,7 @@
 package com.example.kslingo.screens.lessons
 
 import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -45,16 +46,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.kslingo.R
+import com.example.kslingo.screens.practice.PracticeScreen
 import com.example.kslingo.data.model.Lesson
 import com.example.kslingo.data.repository.LessonsRepository
+import com.example.kslingo.screens.practice.PracticeSignActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LessonDetailScreen(
     navController: NavController,
-    lessonId: String?
+    lessonId: String?,
+    lessonViewModel: LessonViewModel = viewModel() // Add ViewModel parameter
 ) {
     val context = LocalContext.current
     val lessonsRepository = remember { LessonsRepository(context) }
@@ -62,6 +67,10 @@ fun LessonDetailScreen(
     // Find the lesson by ID
     val lesson = lessonsRepository.getAlphabetLessons().find { it.id == lessonId }
         ?: lessonsRepository.getNumberLessons().find { it.id == lessonId }
+        ?: lessonsRepository.getPhrasesLessons().find { it.id == lessonId }
+        ?: lessonsRepository.getColorLessons().find { it.id == lessonId }
+        ?: lessonsRepository.getFamilyLessons().find { it.id == lessonId }
+        ?: lessonsRepository.getLanguageLessons().find { it.id == lessonId }
 
     Scaffold(
         topBar = {
@@ -75,7 +84,6 @@ fun LessonDetailScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        // Navigate back to category screen
                         navController.navigate("lesson_category/${lesson?.categoryId}") {
                             popUpTo("lesson_category/${lesson?.categoryId}") { inclusive = false }
                         }
@@ -94,6 +102,7 @@ fun LessonDetailScreen(
             LessonContent(
                 lesson = lesson,
                 lessonsRepository = lessonsRepository,
+                lessonViewModel = lessonViewModel, // Pass ViewModel here
                 navController = navController,
                 modifier = Modifier.padding(paddingValues)
             )
@@ -114,6 +123,7 @@ fun LessonDetailScreen(
 fun LessonContent(
     lesson: Lesson,
     lessonsRepository: LessonsRepository,
+    lessonViewModel: LessonViewModel,
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
@@ -246,7 +256,7 @@ fun LessonContent(
                 )
             }
         }
-        // Practice Section - UPDATED with proper completion logic
+        // Practice Section - UPDATED to use ViewModel
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -284,9 +294,11 @@ fun LessonContent(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     if (!lesson.isCompleted) {
+                        val context = LocalContext.current
                         // Practice with Camera Button
                         Button(
-                            onClick = { /* Navigate to camera practice */ },
+                            onClick = { val intent = Intent(context, PracticeSignActivity::class.java)
+                                context.startActivity(intent)},
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.White,
@@ -298,11 +310,11 @@ fun LessonContent(
                             Text("Practice with Camera")
                         }
 
-                        // Mark Complete Button
+                        // Mark Complete Button - UPDATED to use ViewModel
                         Button(
                             onClick = {
-                                // Mark lesson as completed
-                                lessonsRepository.markLessonCompleted(lesson.id)
+                                // Use ViewModel to mark lesson as completed
+                                lessonViewModel.markLessonCompleted(lesson.id)
 
                                 // Get the next lesson
                                 val nextLesson = lessonsRepository.getNextLesson(lesson.id)

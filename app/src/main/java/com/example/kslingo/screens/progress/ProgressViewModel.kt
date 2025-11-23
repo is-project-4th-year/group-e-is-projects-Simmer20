@@ -12,11 +12,4 @@ import kotlinx.coroutines.launch
 class ProgressViewModel(application: Application) : AndroidViewModel(application) {
     private val userProfileRepository = UserProfileRepository(application.applicationContext)
     val userProfile: StateFlow<UserProfile?> = userProfileRepository.userProfile
-
-    init {
-
-        viewModelScope.launch {
-
-        }
-    }
 }

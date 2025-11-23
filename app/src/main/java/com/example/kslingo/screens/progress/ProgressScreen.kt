@@ -2,6 +2,7 @@
 package com.example.kslingo.screens.progress
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -253,5 +254,69 @@ fun StatItem(icon: ImageVector, value: String, label: String) {
             color = Color.Gray,
             textAlign = TextAlign.Center
         )
+    }
+}
+
+@Composable
+fun ContinueLearningCard(
+    lessonName: String,
+    progress: Int,
+    onContinueClicked: () -> Unit
+) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF6A35EE)),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onContinueClicked() },
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(20.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // The text content from your snippet
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Continue Learning",
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = lessonName,
+                    color = Color.White.copy(alpha = 0.9f),
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+
+                // Linear Progress Indicator
+                Spacer(modifier = Modifier.height(12.dp))
+                LinearProgressIndicator(
+                    progress = progress / 100f,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(8.dp)
+                        .clip(RoundedCornerShape(4.dp)),
+                    color = Color.White, // Progress bar color
+                    trackColor = Color.White.copy(alpha = 0.3f) // Background of the bar
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "$progress% completed",
+                    color = Color.White.copy(alpha = 0.8f),
+                    fontSize = 12.sp,
+                    modifier = Modifier.align(Alignment.End) // Align percentage to the right
+                )
+            }
+            // Add a "play" icon to suggest it's clickable
+            Spacer(modifier = Modifier.width(16.dp))
+            Icon(
+                imageVector = Icons.Default.PlayCircle,
+                contentDescription = "Continue",
+                tint = Color.White,
+                modifier = Modifier.size(40.dp)
+            )
+        }
     }
 }

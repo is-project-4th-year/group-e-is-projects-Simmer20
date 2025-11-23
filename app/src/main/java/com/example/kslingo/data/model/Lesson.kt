@@ -12,7 +12,7 @@ data class Lesson (
 )
 
 enum class LessonType {
-    ALPHABET, NUMBER, GREETING, PHRASE
+    ALPHABET, NUMBER, GREETINGS, PHRASES, COLORS, FAMILY, LANGUAGES
 }
 
 data class LessonContent (

@@ -14,32 +14,101 @@ class LessonsRepository(private val context: Context) {
     fun getLessonCategories(): List<LessonCategory> {
         val alphabetLessons = getAlphabetLessons()
         val numberLessons = getNumberLessons()
+        val phrasesLessons = getPhrasesLessons()
+        val colorLessons = getColorLessons()
+        val familyLessons = getFamilyLessons()
+        val languageLessons = getLanguageLessons()
 
         val completedAlphabets = alphabetLessons.count { lessonStateRepository.isLessonCompleted(it.id) }
         val completedNumbers = numberLessons.count { lessonStateRepository.isLessonCompleted(it.id) }
+        val completedPhrases = phrasesLessons.count { lessonStateRepository.isLessonCompleted(it.id) }
+        val completedColors = colorLessons.count { lessonStateRepository.isLessonCompleted(it.id) }
+        val completedFamily = familyLessons.count { lessonStateRepository.isLessonCompleted(it.id) }
+        val completedLanguage = languageLessons.count { lessonStateRepository.isLessonCompleted(it.id) }
+
+        val isAlphabetsCompleted = completedAlphabets == alphabetLessons.size
+        val isNumbersCompleted = completedNumbers == numberLessons.size
+        val isPhrasesCompleted = completedPhrases == phrasesLessons.size
+        val isColorsCompleted = completedColors == colorLessons.size
+        val isFamilyCompleted = completedFamily == familyLessons.size
+        val isLanguageCompleted = completedLanguage == languageLessons.size
+
+
 
         return listOf(
             LessonCategory(
                 id = "alphabets",
                 title = "Alphabets",
                 description = "Learn KSL alphabet signs",
-                iconRes = R.drawable.sign_a,
+                iconRes = R.drawable.sign,
                 color = 0xFF6A35EE,
                 lessons = alphabetLessons,
                 totalLessons = alphabetLessons.size,
                 completedLessons = completedAlphabets,
-                isLocked = false
+                isCompleted = isAlphabetsCompleted
             ),
             LessonCategory(
                 id = "numbers",
                 title = "Numbers",
                 description = "Learn to sign numbers 0–10",
-                iconRes = R.drawable.sign_1,
+                iconRes = R.drawable.sign,
                 color = 0xFF4CAF50,
                 lessons = numberLessons,
                 totalLessons = numberLessons.size,
                 completedLessons = completedNumbers,
-                isLocked = completedAlphabets < alphabetLessons.size
+               // isLocked = !isAlphabetsCompleted,
+                isLocked = completedAlphabets < alphabetLessons.size,
+                isCompleted = isNumbersCompleted
+            ),
+            LessonCategory(
+                id = "phrases",
+                title = "Phrases",
+                description = "Learn to commonly used phrases",
+                iconRes = R.drawable.sign,
+                color = 0xFF4CAF50,
+                lessons = phrasesLessons,
+                totalLessons = phrasesLessons.size,
+                completedLessons = completedPhrases,
+                //isLocked = !isNumbersCompleted,
+                isLocked = completedNumbers < numberLessons.size,
+                isCompleted = isPhrasesCompleted
+            ),
+            LessonCategory(
+                id = "colors",
+                title = "Colors",
+                description = "Learn to sign colors",
+                iconRes = R.drawable.sign,
+                color = 0xFF6A35EE,
+                lessons = colorLessons,
+                totalLessons = colorLessons.size,
+                completedLessons = completedColors,
+                //isLocked = !isPhrasesCompleted,
+                isLocked = completedPhrases < phrasesLessons.size,
+                isCompleted = isColorsCompleted
+            ),
+            LessonCategory(
+                id = "family",
+                title = "Family",
+                description = "Learn to sign family members",
+                iconRes = R.drawable.sign,
+                color = 0xFF6A35EE,
+                lessons = familyLessons,
+                totalLessons = familyLessons.size,
+                completedLessons = completedFamily,
+                isLocked = !isColorsCompleted,
+                isCompleted = isFamilyCompleted
+            ),
+            LessonCategory(
+                id = "language",
+                title = "Language",
+                description = "Learn to sign different language",
+                iconRes = R.drawable.sign,
+                color = 0xFF6A35EE,
+                lessons = languageLessons,
+                totalLessons = languageLessons.size,
+                completedLessons = completedLanguage,
+                isLocked = !isFamilyCompleted,
+                isCompleted = isLanguageCompleted
             )
         )
     }
@@ -207,15 +276,110 @@ class LessonsRepository(private val context: Context) {
             lesson.copy(isCompleted = lessonStateRepository.isLessonCompleted(lesson.id))
         }
     }
+    fun getPhrasesLessons(): List<Lesson> {
+        val allLessons = listOf(
+            Lesson(
+                "Please", "phrases", "Please", "Learn to sign Please", LessonType.PHRASES,
+                listOf(
+                    LessonContent("Please", R.drawable.sign_please, "Fully closed handshape with palm facing signer is circled on the chest over the heart."
+                    )
+                )
+            ),
+            Lesson(
+                "Sorry", "phrases", "Sorry", "Learn to sign Sorry", LessonType.PHRASES,
+                listOf(
+                    LessonContent("Sorry", R.drawable.sign_sorry, "Make a closed fist and move it in a circular motion on your chest."
+                    )
+                )
+            ),
+            Lesson(
+                "Stop", "phrases", "Stop", "Learn to sign Stop", LessonType.PHRASES,
+                listOf(
+                    LessonContent(
+                        "Stop",R.drawable.sign_stop,"Bring the side of one open hand down sharply against the palm of the other open hand."
+                    )
+                )
+            ),
+            Lesson("Eat", "phrases", "Eat", "Learn to sign Eat", LessonType.PHRASES,
+                listOf(
+                    LessonContent("Eat", R.drawable.sign_eat, "Bring the tips of your fingers and thumb to your mouth as if taking a bite."))
+            ),
+            Lesson("Water", "phrases", "Water", "Learn to sign Water", LessonType.PHRASES,
+                listOf(
+                    LessonContent("Water", R.drawable.sign_water, "Touch your fingers to your chin, palm down, then move outward as if indicating a stream of water"))
+            ),
+            Lesson("Know", "phrases", "Know", "Learn to sign Know", LessonType.PHRASES,
+                listOf(
+                    LessonContent("Know", R.drawable.sign_know, "Tap your fingertips to your temple, palm facing inward.")))
+        )
+        return lessonStateRepository.getUnlockedLessons(allLessons).map { lesson ->
+            lesson.copy(isCompleted = lessonStateRepository.isLessonCompleted(lesson.id))
+        }
+    }
+    fun getColorLessons(): List<Lesson> {
+        val allLessons = listOf(
+            Lesson("White", "colors", "White", "Learn to sign white", LessonType.COLORS,
+                listOf(
+                    LessonContent("White", R.drawable.sign_white, "Hold your index finger in front of your mouth. Bend your finger down once"))
+            ),
+            Lesson("Red", "colors", "Red", "Learn to sign red", LessonType.COLORS,
+                listOf(
+                    LessonContent("Red", R.drawable.sign_red, "Right Extended Index Finger Handshape with palm facing signer bends down repetitively over mouth where tongue is sticking out slightly."))
+            ),
+            Lesson("Black", "colors", "Black", "Learn to sign black", LessonType.COLORS,
+                listOf(
+                    LessonContent("Black", R.drawable.sign_black, "Use your right hand, with the index finger extended, palm facing down. Point to the hairline/temple and then move the finger downwards."))
+            ),
+            Lesson("Green", "colors", "Green", "Learn to sign green", LessonType.COLORS,
+                listOf(
+                    LessonContent("Green", R.drawable.sign_green, "The palm of right hand, in a Full Closed Handshape, is facing signer. Hand moves slightly from the wrist towards and away from the signer.")))
+        )
+        return lessonStateRepository.getUnlockedLessons(allLessons).map { lesson ->
+            lesson.copy(isCompleted = lessonStateRepository.isLessonCompleted(lesson.id))}
+    }
 
-    fun markLessonCompleted(lessonId: String) {
+    fun getFamilyLessons(): List<Lesson> {
+        val allLessons = listOf(
+            Lesson("Father", "family", "Father", "Learn to sign Father", LessonType.FAMILY,
+                listOf(
+                    LessonContent("Father", R.drawable.sign_father, "Right Extended Index Finger Handshape with palm facing left points up. It taps mouth twice."))
+            ),
+            Lesson("Mother", "family", "Mother", "Learn to sign Mother", LessonType.FAMILY,
+                listOf(
+                    LessonContent("Mother", R.drawable.sign_mother, "The fingers of Full Closed Handshape with palm facing signer pat the right cheek"))
+            ),
+            Lesson("Grandfather", "family", "Grandfather", "Learn to sign Grandfather", LessonType.FAMILY,
+                listOf(
+                    LessonContent("Grandfather", R.drawable.sign_grandfather, "Right Extended Index Finger Handshape with palm facing left points up. It taps mouth twice."))
+            ),
+            Lesson("Boy", "family", "Boy", "Learn to sign Boy", LessonType.FAMILY,
+                listOf(
+                    LessonContent("Boy", R.drawable.sign_boy, "Right Extended Index Finger Handshape with palm facing left points up. It taps mouth twice."))
+            )
+        )
+    return lessonStateRepository.getUnlockedLessons(allLessons).map { lesson ->
+        lesson.copy(isCompleted = lessonStateRepository.isLessonCompleted(lesson.id))}
+    }
+
+    fun getLanguageLessons(): List<Lesson> {
+        val allLessons = listOf(
+            Lesson("English", "language", "English", "Learn to sign English", LessonType.LANGUAGES,
+                listOf(
+                    LessonContent("English", R.drawable.sign_english, "Right Extended Index Finger Handshape with palm facing signer is placed on edge of palm of upturned left Full Closed Handshape. Right hand moves up repetitively in a slight inward circular motion"))
+            ),
+            )
+        return lessonStateRepository.getUnlockedLessons(allLessons).map { lesson ->
+            lesson.copy(isCompleted = lessonStateRepository.isLessonCompleted(lesson.id))
+        }
+    }
+        fun markLessonCompleted(lessonId: String) {
         lessonStateRepository.markLessonCompleted(lessonId)
     }
     fun getLessonsForCategory(categoryID: String): List<Lesson>{
         return getLessonCategories().find{ it.id == categoryID }?.lessons ?: emptyList()
     }
     fun getNextLesson(currentLessonId: String): Lesson? {
-        val allLessons = getAlphabetLessons() + getNumberLessons()
+        val allLessons = getAlphabetLessons() + getNumberLessons() + getPhrasesLessons() + getColorLessons() + getFamilyLessons() + getLanguageLessons()
         val nextLessonId = lessonStateRepository.getNextLessonId(currentLessonId, allLessons)
         return allLessons.find { it.id == nextLessonId }
     }

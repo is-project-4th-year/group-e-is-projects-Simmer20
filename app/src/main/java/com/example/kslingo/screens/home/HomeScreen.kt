@@ -42,6 +42,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.kslingo.data.service.FirebaseAuthService
 import androidx.compose.material.icons.filled.Quiz
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.example.kslingo.R
+
 
 
 data class DashboardItem(
@@ -139,8 +146,8 @@ fun HomeScreen(navController: NavController) {
 fun HeaderSection(
     username: String,
     email: String,
-    onProfileClick: () -> Unit,  // Accept function parameters
-    onSettingsClick: () -> Unit   // Accept function parameters
+    onProfileClick: () -> Unit,
+    onSettingsClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -210,19 +217,19 @@ fun WelcomeSection() {
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = "Continue Learning",
+                    text = "Learning Dashboard",
                     color = Color.White,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Alphabet - Letter A",
+                    text = "Jump into your lesson!",
                     color = Color.White.copy(alpha = 0.9f),
                     fontSize = 14.sp,
                     modifier = Modifier.padding(top = 4.dp)
                 )
                 Text(
-                    text = "65% completed",
+                    text = "Self-Paced Learning",
                     color = Color.White.copy(alpha = 0.8f),
                     fontSize = 12.sp,
                     modifier = Modifier.padding(top = 8.dp)
@@ -236,11 +243,17 @@ fun WelcomeSection() {
                     .background(Color.White.copy(alpha = 0.2f)),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "65%",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
+                Image(
+                    painter = painterResource(id = R.drawable.sign),
+                    contentDescription = "Progress Image",
+                    modifier = Modifier
+                        .size(40.dp)                // adjust size as you like
+                        .clip(CircleShape)          // makes the image round
+                        .border(2.dp, Color.White, CircleShape)
+                        .padding(2.dp),
+                    contentScale = ContentScale.Crop // makes the image fill nicely
                 )
+
             }
         }
     }

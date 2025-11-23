@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.example.kslingo.data.model.Lesson
+import com.example.kslingo.data.model.LessonCategory
 import com.google.firebase.auth.FirebaseAuth
 
 class LessonStateRepository(private val context: Context) {
@@ -13,30 +14,32 @@ class LessonStateRepository(private val context: Context) {
     private val completedLessonsInMemory = mutableSetOf<String>()
 
     init {
-        // Add a listener to react instantly when the user logs in or out.
         FirebaseAuth.getInstance().addAuthStateListener { auth ->
             val firebaseUser = auth.currentUser
             if (firebaseUser != null) {
-                // USER LOGGED IN: Initialize prefs and load their specific progress.
                 Log.d("LessonStateRepo", "User ${firebaseUser.uid} logged in. Loading their progress.")
                 val prefsName = "lesson_prefs_${firebaseUser.uid}"
                 userPrefs = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
                 loadCompletedLessonsFromPrefs()
             } else {
-                // USER LOGGED OUT: Clear all local data.
                 Log.d("LessonStateRepo", "User logged out. Clearing local data.")
                 completedLessonsInMemory.clear()
-                userPrefs?.edit()?.clear()?.apply() // Clear the prefs file of the user who just logged out
-                userPrefs = null // Set to null
+                userPrefs?.edit()?.clear()?.apply()
+                userPrefs = null
             }
         }
     }
 
-    private fun loadCompletedLessonsFromPrefs() {
+    fun reloadCompleteLessons() {
+        loadCompletedLessonsFromPrefs()
+    }
+
+    private fun loadCompletedLessonsFromPrefs(): Set<String> {
         completedLessonsInMemory.clear() // Clear any previous user's data
         val completedSet = userPrefs?.getStringSet("completed_lessons", emptySet()) ?: emptySet()
         completedLessonsInMemory.addAll(completedSet)
         Log.d("LessonStateRepo", "Loaded ${completedLessonsInMemory.size} completed lessons from prefs.")
+        return completedLessonsInMemory.toSet()
     }
 
     fun markLessonCompleted(lessonId: String) {
@@ -65,10 +68,23 @@ class LessonStateRepository(private val context: Context) {
         return allLessons.mapIndexed { index, lesson ->
             val isUnlocked = when (index) {
                 0 -> true // The first lesson is always unlocked.
-                else -> isLessonCompleted(allLessons[index - 1].id) // Unlocked if the previous one is done.
+                else -> isLessonCompleted(allLessons[index - 1].id)
             }
             lesson.copy(isLocked = !isUnlocked)
         }
+    }
+
+    fun getUnlockedCategories(allCategories: List<LessonCategory>): List<LessonCategory> {
+        val unlockedCategories = mutableListOf<LessonCategory>()
+        var previousCategoryCompleted = true
+        for (category in allCategories) {
+            val lessons = category.lessons // get lessons for the category
+            val isUnlocked = previousCategoryCompleted
+            val isCompleted = lessons.all { isLessonCompleted(it.id) }
+            unlockedCategories.add(category.copy(isLocked = !isUnlocked, isCompleted = isCompleted))
+            previousCategoryCompleted = isCompleted
+        }
+        return unlockedCategories
     }
 
     fun getNextLessonId(currentLessonId: String, allLessons: List<Lesson>): String? {
