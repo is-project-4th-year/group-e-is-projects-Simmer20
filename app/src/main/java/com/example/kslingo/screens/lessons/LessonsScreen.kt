@@ -54,9 +54,9 @@ fun LessonsScreen(
 ) {
     val categories by lessonViewModel.lessonCategories.collectAsState()
 
-//    LaunchedEffect(key1 = Unit) {
-//        lessonViewModel.loadLessonsWithProgress()
-//    }
+    LaunchedEffect(key1 = Unit) {
+        lessonViewModel.loadLessonsWithProgress()
+    }
 
     Scaffold(
         topBar = {

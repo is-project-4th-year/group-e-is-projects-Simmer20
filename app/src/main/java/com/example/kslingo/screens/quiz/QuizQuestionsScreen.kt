@@ -18,17 +18,16 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -45,20 +44,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.kslingo.data.model.MediaType
 import com.example.kslingo.data.model.Quiz
 import com.example.kslingo.data.model.QuizQuestion
 import com.example.kslingo.data.repository.QuizRepository
 import kotlinx.coroutines.delay
-import java.util.Timer
-import kotlin.time.Duration
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Timer
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,15 +77,15 @@ fun QuizQuestionsScreen(
     val currentQuestion = questions.getOrNull(currentQuestionIndex)
 
     // Timer effect
-    LaunchedEffect(key1 = currentQuestionIndex, key2 = quiz?.timeLimit) {
-        if (quiz?.timeLimit != null) {
+    LaunchedEffect(key1 = currentQuestion, key2 = showResult) {
+        if (quiz?.timeLimit != null && !showResult) {
             timeLeft = quiz.timeLimit
-            while (timeLeft > 0 && currentQuestionIndex == questions.indexOf(currentQuestion)) {
+            while (timeLeft > 0) {
                 delay(1000)
                 timeLeft--
             }
-            // Auto-submit if time runs out
-            if (timeLeft == 0 && !showResult) {
+            // Auto-submit if time runs out and an answer hasn't been submitted
+            if (!showResult) {
                 showResult = true
             }
         }
@@ -109,7 +103,7 @@ fun QuizQuestionsScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        // Show confirmation dialog before exiting
+                        // Consider showing a confirmation dialog before exiting
                         navController.popBackStack()
                     }) {
                         Icon(
@@ -144,19 +138,23 @@ fun QuizQuestionsScreen(
                     }
                 },
                 onNextQuestion = {
-                    if (selectedAnswer == currentQuestion.correctAnswer) {
-                        score++
-                    }
-
+                    // Score is tallied when submitting, so we only handle navigation here
                     if (currentQuestionIndex < questions.size - 1) {
                         currentQuestionIndex++
                         selectedAnswer = null
                         showResult = false
+                        // Reset timer for the new question if applicable
+                        if (quiz.timeLimit != null) {
+                            timeLeft = quiz.timeLimit
+                        }
                     } else {
                         isQuizCompleted = true
                     }
                 },
                 onSubmitAnswer = {
+                    if (selectedAnswer == currentQuestion.correctAnswer) {
+                        score++
+                    }
                     showResult = true
                 },
                 modifier = Modifier.padding(paddingValues)
@@ -182,7 +180,7 @@ fun QuizQuestionsScreen(
                     Text(
                         text = "Complete more lessons to unlock this quiz",
                         color = Color.Gray,
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     Button(
@@ -209,7 +207,6 @@ fun QuizQuestionContent(
     onNextQuestion: () -> Unit,
     onSubmitAnswer: () -> Unit,
     modifier: Modifier = Modifier
-
 ) {
     Column(
         modifier = modifier
@@ -236,13 +233,13 @@ fun QuizQuestionContent(
                     Icon(
                         imageVector = Icons.Default.Timer,
                         contentDescription = "Time left",
-                        tint = if (timeLeft < 10) Color.Red else Color(0xFF6A35EE),
+                        tint = if (timeLeft < 10 && timeLeft % 2 == 0) Color.Red else Color(0xFF6A35EE),
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.size(4.dp))
                     Text(
                         text = "${timeLeft}s",
-                        color = if (timeLeft < 10) Color.Red else Color(0xFF6A35EE),
+                        color = if (timeLeft < 10 && timeLeft % 2 == 0) Color.Red else Color(0xFF6A35EE),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -282,7 +279,7 @@ fun QuizQuestionContent(
                     color = Color.Black,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier.padding(bottom = 20.dp)
                 )
 
@@ -296,15 +293,15 @@ fun QuizQuestionContent(
                     contentAlignment = Alignment.Center
                 ) {
                     when (question.mediaType) {
-                        com.example.kslingo.data.model.MediaType.IMAGE -> {
+                        MediaType.IMAGE -> {
                             Image(
                                 painter = painterResource(id = question.mediaResource),
                                 contentDescription = "Sign demonstration",
                                 modifier = Modifier.fillMaxSize()
                             )
                         }
-                        com.example.kslingo.data.model.MediaType.VIDEO -> {
-                            // Video placeholder - you can integrate ExoPlayer here
+                        MediaType.VIDEO -> {
+                            // Video placeholder
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
@@ -360,10 +357,10 @@ fun QuizQuestionContent(
                     colors = CardDefaults.cardColors(containerColor = backgroundColor),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                     shape = RoundedCornerShape(12.dp),
-                   border = BorderStroke(
-                       width = if (isSelected ||showCorrect || showIncorrect) 2.dp else 1.dp,
-                       color = borderColor
-                   )
+                    border = BorderStroke(
+                        width = if (isSelected || showCorrect || showIncorrect) 2.dp else 1.dp,
+                        color = borderColor
+                    )
                 ) {
                     Row(
                         modifier = Modifier
@@ -385,18 +382,16 @@ fun QuizQuestionContent(
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
+                            val letter = when (question.options.indexOf(option)) {
+                                0 -> "A"
+                                1 -> "B"
+                                2 -> "C"
+                                3 -> "D"
+                                else -> "?"
+                            }
                             Text(
-                                text = when (question.options.indexOf(option)) {
-                                    0 -> "A"
-                                    1 -> "B"
-                                    2 -> "C"
-                                    3 -> "D"
-                                    else -> "?"
-                                },
-                                color = when {
-                                    showCorrect || showIncorrect || isSelected -> Color.White
-                                    else -> Color.Gray
-                                },
+                                text = letter,
+                                color = if (isSelected || showCorrect || showIncorrect) Color.White else Color.Gray,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold
                             )
@@ -409,7 +404,6 @@ fun QuizQuestionContent(
                             color = when {
                                 showCorrect -> Color(0xFF4CAF50)
                                 showIncorrect -> Color(0xFFF44336)
-                                isSelected -> Color(0xFF6A35EE)
                                 else -> Color.Black
                             },
                             fontSize = 16.sp,
@@ -420,75 +414,35 @@ fun QuizQuestionContent(
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        // This spacer pushes the button to the bottom
+        Spacer(modifier = Modifier.weight(1f))
 
-        // Next Button or Result Explanation
-        if (showResult) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // Explanation
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFF6A35EE).copy(alpha = 0.05f)
-                    ),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Text(
-                            text = if (selectedAnswer == question.correctAnswer) "✓ Correct!" else "✗ Incorrect",
-                            color = if (selectedAnswer == question.correctAnswer) Color(0xFF4CAF50) else Color(0xFFF44336),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = question.explanation,
-                            color = Color.Gray,
-                            fontSize = 14.sp
-                        )
-                    }
-                }
-
-                // Next Button
-                Button(
-                    onClick = onNextQuestion,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6A35EE),
-                        contentColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = if (currentQuestionIndex < totalQuestions - 1) "Next Question" else "See Results",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        } else if (selectedAnswer != null && quiz.timeLimit == null) {
-            // Submit button for untimed quizzes
+        // This button is now unified for submitting and moving to the next question
+        if (selectedAnswer != null) {
             Button(
-                onClick = { onSubmitAnswer() },
+                onClick = {
+                    if (showResult) {
+                        onNextQuestion()
+                    } else {
+                        onSubmitAnswer()
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
+                    .height(56.dp)
+                    .padding(top = 8.dp), // Add some padding from the elements above
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF6A35EE),
-                    contentColor = Color.White
+                    containerColor = Color(0xFF6A35EE)
                 ),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Text(
-                    text = "Submit Answer",
-                    fontSize = 16.sp,
+                    text = if (showResult) {
+                        if (currentQuestionIndex < totalQuestions - 1) "Next Question" else "See Results"
+                    } else {
+                        "Submit"
+                    },
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
