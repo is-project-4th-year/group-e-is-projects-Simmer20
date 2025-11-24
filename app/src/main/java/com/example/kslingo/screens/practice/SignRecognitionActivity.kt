@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.kslingo.R
 import com.example.kslingo.screens.practice.SignRecognitionHelper
+import com.google.mediapipe.formats.proto.LandmarkProto
 import com.google.mediapipe.framework.image.BitmapImageBuilder
 import com.google.mediapipe.tasks.core.BaseOptions
 import com.google.mediapipe.tasks.vision.core.RunningMode
@@ -112,8 +113,6 @@ class SignRecognitionActivity : AppCompatActivity() {
     private fun processHandLandmarks(result: HandLandmarkerResult) {
         if (result.landmarks().isNotEmpty()) {
             val landmarks = result.landmarks()[0]
-
-            // Convert to flat array (21 landmarks x 3 cords = 63 values)
             val landmarkArray = FloatArray(63)
             landmarks.forEachIndexed { index, landmark ->
                 landmarkArray[index * 3] = landmark.x()
@@ -134,6 +133,17 @@ class SignRecognitionActivity : AppCompatActivity() {
             }
         }
     }
+    private fun prepareInput(landmarks: List<LandmarkProto.Landmark>): FloatArray {
+        val input = FloatArray(63)  // 21 landmarks * 3
+        var index = 0
+        for (lm in landmarks) {
+            input[index++] = lm.x  // already 0–1
+            input[index++] = lm.y  // already 0–1
+            input[index++] = lm.z  // already relative depth
+        }
+        return input
+    }
+
 
     private fun checkCameraPermission(): Boolean {
         return ContextCompat.checkSelfPermission(

@@ -5,23 +5,23 @@ data class Quiz(
     val title: String,
     val description: String,
     val type: QuizType,
-    val categoryId: String? = null, // null for mixed quizzes
+    val categoryId: String? = null,
     val questions: List<QuizQuestion>,
     val totalQuestions: Int = 5,
-    val timeLimit: Int? = 60, // seconds per question, null for no time limit
-    val passingScore: Int = 70 // percentage
+    val timeLimit: Int? = 60,
+    val passingScore: Int = 70
 )
 
 enum class QuizType {
-    TOPICAL, // Quiz on specific category (Alphabets, Numbers, etc.)
-    MIXED    // Random questions from all categories
+    TOPICAL,
+    MIXED
 }
 
 data class QuizQuestion(
     val id: String,
     val question: String,
     val mediaType: MediaType,
-    val mediaResource: Int, // image or video resource
+    val mediaResource: Int,
     val options: List<String>,
     val correctAnswer: String,
     val explanation: String

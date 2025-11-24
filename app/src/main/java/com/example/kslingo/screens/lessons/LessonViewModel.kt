@@ -7,11 +7,13 @@ import com.example.kslingo.data.model.LessonCategory
 import android.content.Context
 import androidx.compose.animation.core.copy
 import androidx.compose.ui.semantics.getOrNull
+import androidx.core.util.remove
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kslingo.data.model.Lesson
 import com.example.kslingo.data.repository.LessonStateRepository
 import com.example.kslingo.data.repository.LessonsRepository
+import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -72,7 +74,7 @@ class LessonViewModel(application: Application) : AndroidViewModel(application) 
     }
 
 
-    private val _completedLessons = MutableStateFlow(0)
+private val _completedLessons = MutableStateFlow(0)
     val completedLessons: StateFlow<Int> = _completedLessons.asStateFlow()
 
     private var currentCategoryId: String? = null
@@ -94,8 +96,8 @@ class LessonViewModel(application: Application) : AndroidViewModel(application) 
     fun markLessonCompleted(lessonId: String) {
         viewModelScope.launch {
             lessonsRepository.markLessonCompleted(lessonId)
-            // Reload to update lock/unlock states
-            loadLessons(currentCategoryId)
+            // Reload to update lock/unlock states for all categories
+            loadLessonsWithProgress()
         }
     }
 

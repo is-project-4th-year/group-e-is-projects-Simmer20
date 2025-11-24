@@ -14,7 +14,7 @@ class SignRecognitionHelper(context: Context) {
 
     init {
         // Load TFLite model
-        val modelFile = context.assets.openFd("hand_gesture_model.tflite")
+        val modelFile = context.assets.openFd("hand_landmark_model.tflite")
         val inputStream = FileInputStream(modelFile.fileDescriptor)
         val fileChannel = inputStream.channel
         val startOffset = modelFile.startOffset
