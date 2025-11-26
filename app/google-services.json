@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "389506886479",
+    "firebase_url": "https://kslingo-c1c6d-default-rtdb.firebaseio.com",
+    "project_id": "kslingo-c1c6d",
+    "storage_bucket": "kslingo-c1c6d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:389506886479:android:77b08e7aa11379085c333a",
+        "android_client_info": {
+          "package_name": "com.example.kslingo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVg9wQWKXLXAZF1RzGKIUlASnlaiLVl24"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
